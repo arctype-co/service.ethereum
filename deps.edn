@@ -1,0 +1,33 @@
+{:deps {cheshire {:mvn/version "5.10.2"}
+        clj-http {:mvn/version "3.12.3"}
+        co.arctype/service {:mvn/version "1.2.0"}
+        org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/core.async {:mvn/version "1.5.648"}
+        org.web3j/abi {:mvn/version "4.8.7"}}
+
+ :paths ["src"]
+
+ :aliases {:build {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
+                   :exec-fn hf.depstar/jar
+                   :exec-args {:jar "service-ethereum.jar"
+                               :sync-pom true
+                               :pom-file "pom.xml"
+                               :artifact-id "service.ethereum"
+                               :group-id "co.arctype"
+                               :version "0.1.0-SNAPSHOT"}}
+
+           :install {:extra-deps {slipset/deps-deploy {:mvn/version "0.2.0"}}
+                     :exec-fn deps-deploy.deps-deploy/deploy
+                     :exec-args {:installer :local
+                                 :artifact "service-ethereum.jar"}}
+
+           :deploy {:extra-deps {slipset/deps-deploy {:mvn/version "0.2.0"}}
+                    :exec-fn deps-deploy.deps-deploy/deploy
+                    :exec-args {:installer :remote
+                                :sign-releases? true
+                                :artifact "service-ethereum.jar"}}
+
+           :test
+           {:extra-deps {lambdaisland/kaocha {:mvn/version "1.63.998"}}
+            :extra-paths ["test"]
+            :main-opts ["-m" "kaocha.runner"]}}}
